@@ -4,7 +4,6 @@ export const ARTIST = {
   en: 'Kim Soo-gil',
   ho: '다헌',
   hoHanja: '茶軒',
-  born: 1943,
 };
 
 // 처음 화면에 크게 보일 작품 번호
