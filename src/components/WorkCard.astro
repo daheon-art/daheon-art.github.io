@@ -1,0 +1,62 @@
+---
+import { Image } from 'astro:assets';
+import { altText, workUrl, type Work } from '../lib/works';
+
+interface Props {
+  work: Work;
+  showYear?: boolean;
+}
+
+const { work, showYear = true } = Astro.props;
+const d = work.data;
+---
+
+<li class="card">
+  <a href={workUrl(work)}>
+    <div class="frame">
+      <Image
+        src={d.image}
+        alt={altText(work)}
+        widths={[240, 400, 640]}
+        sizes="(max-width: 520px) 45vw, 240px"
+        loading="lazy"
+      />
+    </div>
+    <p class="title">{d.title_ko}</p>
+    {showYear && d.year && <p class="year">{d.year}</p>}
+  </a>
+</li>
+
+<style>
+  /* 그림 비율과 상관없이 칸 크기를 고정하고 그 안에 맞춰 넣는다 */
+  .frame {
+    position: relative;
+    aspect-ratio: 1;
+    background: var(--tile);
+  }
+
+  .frame :global(img) {
+    position: absolute;
+    inset: 9%;
+    width: 82%;
+    height: 82%;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.18));
+  }
+
+  .title {
+    margin: 10px 0 0;
+    font-size: 0.92rem;
+    line-height: 1.45;
+  }
+
+  .year {
+    margin: 2px 0 0;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  a:hover .title {
+    color: var(--seal);
+  }
+</style>

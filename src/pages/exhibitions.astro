@@ -1,0 +1,102 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import exhibitions from '../data/exhibitions.json';
+import { altText, getWorks, workUrl } from '../lib/works';
+
+const works = await getWorks();
+const byId = new Map(works.map((w) => [w.id, w]));
+
+// 연도별로 묶는다
+const groups = new Map<string, typeof exhibitions>();
+for (const e of exhibitions) {
+  const y = e.year ? String(e.year) : '연도 미상';
+  if (!groups.has(y)) groups.set(y, []);
+  groups.get(y)!.push(e);
+}
+---
+
+<Base title="전시">
+  <div class="wrap">
+    <header class="page-head">
+      <h1>전시</h1>
+      <p>지금까지 모은 자료(전시 폴더, 단체전 도록)에서 확인된 {exhibitions.length}건입니다. 정리 중입니다.</p>
+    </header>
+
+    {
+      [...groups].map(([y, list]) => (
+        <section class="year">
+          <h2 class="year-head">{y}</h2>
+          <ul class="list">
+            {list.map((e) => (
+              <li>
+                <p class="name">{e.name}</p>
+                {e.venue && <p class="venue muted">{e.venue}</p>}
+                {e.works.length > 0 && (
+                  <ul class="thumbs">
+                    {e.works
+                      .map((id) => byId.get(id))
+                      .filter((w) => !!w)
+                      .map((w) => (
+                        <li>
+                          <a href={workUrl(w)} title={w.data.title_ko}>
+                            <Image src={w.data.image} alt={altText(w)} widths={[96, 192]} sizes="96px" loading="lazy" />
+                          </a>
+                        </li>
+                      ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</Base>
+
+<style>
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .list > li + li {
+    margin-top: 20px;
+  }
+
+  .name {
+    margin: 0;
+  }
+
+  .venue {
+    margin: 2px 0 0;
+    font-size: 0.88rem;
+  }
+
+  .thumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin: 10px 0 0;
+    padding: 0;
+  }
+
+  .thumbs a {
+    position: relative;
+    display: block;
+    width: 96px;
+    height: 96px;
+    background: var(--tile);
+  }
+
+  .thumbs :global(img) {
+    position: absolute;
+    inset: 8px;
+    width: calc(100% - 16px);
+    height: calc(100% - 16px);
+    object-fit: contain;
+  }
+</style>

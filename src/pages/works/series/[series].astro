@@ -1,0 +1,52 @@
+---
+import Base from '../../../layouts/Base.astro';
+import SeriesTabs from '../../../components/SeriesTabs.astro';
+import WorkCard from '../../../components/WorkCard.astro';
+import { SERIES, type Series } from '../../../data/series';
+import { getWorks, yearRange, type Work } from '../../../lib/works';
+
+export async function getStaticPaths() {
+  const works = await getWorks();
+  return SERIES.map((s) => ({
+    params: { series: s.slug },
+    props: { s, list: works.filter((w) => w.data.series === s.code) },
+  })).filter((p) => p.props.list.length);
+}
+
+interface Props {
+  s: Series;
+  list: Work[];
+}
+
+const { s, list } = Astro.props;
+
+// 연도별로 묶는다 (연도 미상은 맨 뒤)
+const byYear = new Map<string, Work[]>();
+for (const w of list) {
+  const y = w.data.year ? String(w.data.year) : '연도 미상';
+  if (!byYear.has(y)) byYear.set(y, []);
+  byYear.get(y)!.push(w);
+}
+---
+
+<Base title={s.ko}>
+  <div class="wrap">
+    <header class="page-head">
+      <h1>{s.ko}</h1>
+      <p><span class="en">{s.en}</span> · {yearRange(list)} · {list.length}점</p>
+    </header>
+    <SeriesTabs current={s.slug} />
+    {
+      [...byYear].map(([y, ws]) => (
+        <section>
+          <h2 class="year-head">{y}</h2>
+          <ul class="grid">
+            {ws.map((w) => (
+              <WorkCard work={w} showYear={false} />
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</Base>

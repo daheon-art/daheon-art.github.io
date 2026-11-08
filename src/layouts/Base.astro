@@ -1,0 +1,135 @@
+---
+import '../styles/global.css';
+import { ARTIST, SHOW_DRAFT_NOTICE } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = `한국화가 ${ARTIST.ko}(${ARTIST.hanja}, ${ARTIST.en})의 작품` } = Astro.props;
+const fullTitle = title ? `${title} | ${ARTIST.ko}` : `${ARTIST.ko} ${ARTIST.hanja}`;
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/works/', label: '작품' },
+  { href: '/about/', label: '작가' },
+  { href: '/exhibitions/', label: '전시' },
+];
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&display=swap"
+    />
+  </head>
+  <body>
+    {
+      SHOW_DRAFT_NOTICE && (
+        <p class="notice">준비 중인 사이트입니다. 작품 정보는 아직 검수 전이라 틀린 곳이 있을 수 있습니다.</p>
+      )
+    }
+    <header class="site-header wrap">
+      <a class="brand" href="/">
+        <span class="brand-ko">{ARTIST.ko}</span>
+        <span class="brand-hanja">{ARTIST.hanja}</span>
+      </a>
+      <nav aria-label="주 메뉴">
+        {
+          nav.map((n) => (
+            <a href={n.href} aria-current={path.startsWith(n.href) ? 'page' : undefined}>
+              {n.label}
+            </a>
+          ))
+        }
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer wrap">
+      <p>© {ARTIST.ko} {ARTIST.en}. 이미지와 글을 무단으로 쓰지 마십시오.</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .notice {
+    margin: 0;
+    padding: 8px var(--gutter);
+    background: #efe6dc;
+    color: #6b4a2f;
+    font-size: 0.85rem;
+    text-align: center;
+  }
+
+  .site-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px 32px;
+    padding-top: 28px;
+    padding-bottom: 20px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 10px;
+    font-family: var(--serif);
+  }
+
+  .brand-ko {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+
+  .brand-hanja {
+    font-size: 1rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  nav {
+    display: flex;
+    gap: 28px;
+  }
+
+  nav a {
+    font-size: 1rem;
+    color: var(--muted);
+  }
+
+  nav a[aria-current='page'] {
+    color: var(--fg);
+    font-weight: 600;
+  }
+
+  nav a:hover {
+    color: var(--seal);
+  }
+
+  .site-footer {
+    margin-top: 96px;
+    padding-top: 24px;
+    padding-bottom: 40px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  .site-footer p {
+    margin: 0;
+  }
+</style>

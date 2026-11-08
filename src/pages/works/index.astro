@@ -1,0 +1,42 @@
+---
+import Base from '../../layouts/Base.astro';
+import SeriesTabs from '../../components/SeriesTabs.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import { SERIES } from '../../data/series';
+import { getWorks, yearRange } from '../../lib/works';
+
+const works = await getWorks();
+const groups = SERIES.map((s) => ({ s, list: works.filter((w) => w.data.series === s.code) })).filter(
+  (g) => g.list.length,
+);
+const PREVIEW = 12;
+---
+
+<Base title="작품">
+  <div class="wrap">
+    <header class="page-head">
+      <h1>작품</h1>
+      <p>{works.length}점</p>
+    </header>
+    <SeriesTabs />
+    {
+      groups.map(({ s, list }) => (
+        <section class="section">
+          <div class="section-head">
+            <h2>
+              {s.ko} <span class="en">{s.en}</span>
+            </h2>
+            <a class="more" href={`/works/series/${s.slug}/`}>
+              {yearRange(list)} · {list.length}점 모두 보기 →
+            </a>
+          </div>
+          <ul class="grid">
+            {list.slice(0, PREVIEW).map((w) => (
+              <WorkCard work={w} />
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</Base>

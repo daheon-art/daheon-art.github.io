@@ -1,0 +1,217 @@
+---
+// 약력은 src/data/bio.json 에 있다. 근거와 확인할 점은 ../work/profile/약력_정리.md
+import Base from '../layouts/Base.astro';
+import { ARTIST } from '../data/site';
+import bio from '../data/bio.json';
+
+type Section = (typeof bio.sections)[number];
+const byId = (id: string) => bio.sections.find((s) => s.id === id) as Section;
+
+const left = ['education', 'career', 'awards'].map(byId);
+const right = ['solo', 'international'].map(byId);
+const folded = bio.sections.filter((s) => 'collapsed' in s && s.collapsed);
+---
+
+<Base title="작가" description={`${ARTIST.ko}(${ARTIST.hanja}) 약력`}>
+  <div class="wrap about">
+    <header class="page-head">
+      <h1>{ARTIST.ko} <span class="hanja">{ARTIST.hanja}</span></h1>
+      <p class="en-name">{ARTIST.en}</p>
+      <ul class="profile">
+        {bio.profile.map((p) => <li><span>{p.label}</span>{p.text}</li>)}
+      </ul>
+    </header>
+
+    <div class="cols">
+      <div>
+        {
+          left.map((s) => (
+            <section>
+              <h2>{s.title}</h2>
+              <ul class="cv">
+                {s.items.map((i) => (
+                  <li>
+                    <span class="y">{i.year}</span>
+                    <span>{i.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))
+        }
+        <section>
+          <h2>작품 소장</h2>
+          <p class="plain">{bio.collections.join(', ')} 등</p>
+        </section>
+      </div>
+
+      <div>
+        {
+          right.map((s) => (
+            <section>
+              <h2>{s.title}</h2>
+              <ul class="cv">
+                {s.items.map((i) => (
+                  <li>
+                    <span class="y">{i.year}</span>
+                    <span>{i.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))
+        }
+      </div>
+    </div>
+
+    {
+      folded.map((s) => (
+        <details>
+          <summary>
+            {s.title} <span class="count">{s.items.length}건</span>
+          </summary>
+          <ul class="cv">
+            {s.items.map((i) => (
+              <li>
+                <span class="y">{i.year}</span>
+                <span>{i.text}</span>
+              </li>
+            ))}
+          </ul>
+        </details>
+      ))
+    }
+  </div>
+</Base>
+
+<style>
+  .hanja {
+    font-weight: 400;
+    font-size: 0.7em;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .en-name {
+    margin: 6px 0 0;
+  }
+
+  .profile {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 24px;
+    margin: 14px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.95rem;
+  }
+
+  .profile span {
+    color: var(--muted);
+    margin-right: 8px;
+  }
+
+  .cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+  }
+
+  h2,
+  summary {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+  }
+
+  .cv,
+  .plain {
+    margin: 0 0 40px;
+    padding: 0;
+    list-style: none;
+    font-size: 0.93rem;
+    line-height: 1.6;
+  }
+
+  .cv li {
+    display: grid;
+    grid-template-columns: 7em 1fr;
+    gap: 12px;
+  }
+
+  .cv li + li {
+    margin-top: 6px;
+  }
+
+  .y {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  details {
+    margin: 0 0 8px;
+  }
+
+  summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary::after {
+    content: '펼치기 +';
+    margin-left: auto;
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  details[open] summary::after {
+    content: '접기 −';
+  }
+
+  details[open] summary {
+    margin-bottom: 16px;
+  }
+
+  .count {
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  details .cv {
+    columns: 2;
+    column-gap: 56px;
+  }
+
+  details .cv li {
+    break-inside: avoid;
+  }
+
+  @media (max-width: 800px) {
+    .cols {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    details .cv {
+      columns: 1;
+    }
+
+    .cv li {
+      grid-template-columns: 5.8em 1fr;
+    }
+  }
+</style>

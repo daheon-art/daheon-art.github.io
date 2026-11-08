@@ -1,0 +1,22 @@
+---
+import { SERIES } from '../data/series';
+
+interface Props {
+  current?: string; // 연작 slug. 비우면 '전체'
+}
+
+const { current } = Astro.props;
+---
+
+<ul class="tabs" aria-label="연작">
+  <li><a href="/works/" aria-current={!current ? 'page' : undefined}>전체</a></li>
+  {
+    SERIES.map((s) => (
+      <li>
+        <a href={`/works/series/${s.slug}/`} aria-current={current === s.slug ? 'page' : undefined}>
+          {s.ko}
+        </a>
+      </li>
+    ))
+  }
+</ul>
