@@ -2,7 +2,7 @@
 import Base from '../../../layouts/Base.astro';
 import SeriesTabs from '../../../components/SeriesTabs.astro';
 import WorkCard from '../../../components/WorkCard.astro';
-import { SERIES, type Series } from '../../../data/series';
+import { SERIES, UNTITLED_NOTE, type Series } from '../../../data/series';
 import { getWorks, yearRange, type Work } from '../../../lib/works';
 
 export async function getStaticPaths() {
@@ -20,10 +20,11 @@ interface Props {
 
 const { s, list } = Astro.props;
 
-// 연도별로 묶는다 (연도 미상은 맨 뒤)
+// 연도별로 묶는다 (연도 미상은 맨 뒤). 제목 미상(U)은 나누지 않고 미상번호 순으로 한 번에 보인다
+const untitled = s.code === 'U';
 const byYear = new Map<string, Work[]>();
 for (const w of list) {
-  const y = w.data.year ? String(w.data.year) : '연도 미상';
+  const y = untitled ? '' : w.data.year ? String(w.data.year) : '연도 미상';
   if (!byYear.has(y)) byYear.set(y, []);
   byYear.get(y)!.push(w);
 }
@@ -33,16 +34,19 @@ for (const w of list) {
   <div class="wrap">
     <header class="page-head">
       <h1>{s.ko}</h1>
-      <p><span class="en">{s.en}</span> · {yearRange(list)} · {list.length}점</p>
+      <p>
+        <span class="en">{s.en}</span> · {untitled ? '' : `${yearRange(list)} · `}{list.length}점
+      </p>
+      {untitled && <p>{UNTITLED_NOTE}</p>}
     </header>
     <SeriesTabs current={s.slug} />
     {
       [...byYear].map(([y, ws]) => (
         <section>
-          <h2 class="year-head">{y}</h2>
+          {y && <h2 class="year-head">{y}</h2>}
           <ul class="grid">
             {ws.map((w) => (
-              <WorkCard work={w} showYear={false} />
+              <WorkCard work={w} showYear={untitled} />
             ))}
           </ul>
         </section>

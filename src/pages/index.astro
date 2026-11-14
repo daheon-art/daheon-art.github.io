@@ -8,7 +8,7 @@ import { altText, getWorks, sizeText, workUrl, yearRange } from '../lib/works';
 const works = await getWorks();
 const featured = works.find((w) => w.id === FEATURED) ?? works[0];
 
-const series = SERIES.map((s) => {
+const series = SERIES.filter((s) => !s.hideOnHome).map((s) => {
   const list = works.filter((w) => w.data.series === s.code);
   const cover = list.find((w) => w.id === s.cover) ?? list[0];
   return { s, list, cover };

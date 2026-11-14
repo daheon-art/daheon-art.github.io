@@ -5,11 +5,12 @@ export type Work = CollectionEntry<'works'>;
 
 const seriesOrder = (code: string) => SERIES.findIndex((s) => s.code === code);
 
-// 연작 순서 → 연도 내림차순 → 번호 내림차순
+// 연작 순서 → 연도 내림차순 → 번호 내림차순. 제목 미상(U)은 미상번호 순
 export function sortWorks(list: Work[]): Work[] {
   return [...list].sort((a, b) => {
     const s = seriesOrder(a.data.series) - seriesOrder(b.data.series);
     if (s) return s;
+    if (a.data.series === 'U') return (a.data.unnamed_no ?? 0) - (b.data.unnamed_no ?? 0);
     const y = (b.data.year ?? 0) - (a.data.year ?? 0);
     if (y) return y;
     return b.data.num.localeCompare(a.data.num);

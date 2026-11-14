@@ -151,6 +151,12 @@ h3 {
   white-space: nowrap;
 }
 
+.section .note {
+  margin: -8px 0 20px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
 .year-head {
   font-family: var(--serif);
   font-size: 1.05rem;

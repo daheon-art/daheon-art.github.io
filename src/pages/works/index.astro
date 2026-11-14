@@ -2,7 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import SeriesTabs from '../../components/SeriesTabs.astro';
 import WorkCard from '../../components/WorkCard.astro';
-import { SERIES } from '../../data/series';
+import { SERIES, UNTITLED_NOTE } from '../../data/series';
 import { getWorks, yearRange } from '../../lib/works';
 
 const works = await getWorks();
@@ -27,9 +27,11 @@ const PREVIEW = 12;
               {s.ko} <span class="en">{s.en}</span>
             </h2>
             <a class="more" href={`/works/series/${s.slug}/`}>
-              {yearRange(list)} · {list.length}점 모두 보기 →
+              {s.code === 'U' ? '' : `${yearRange(list)} · `}
+              {list.length}점 모두 보기 →
             </a>
           </div>
+          {s.code === 'U' && <p class="note">{UNTITLED_NOTE}</p>}
           <ul class="grid">
             {list.slice(0, PREVIEW).map((w) => (
               <WorkCard work={w} />

@@ -12,9 +12,11 @@
 ## 검수 중 (지금)
 
 `works/`와 `src/data/exhibitions.json`은 `../scripts/export_site.py`가 만든다. 직접 고치지 않는다.
+번호 미상 작품(U)은 이름표 `../catalog/unnamed.csv`에 있는 35점만 '제목 미상' 묶음으로 나간다. 제목과 번호는 이름표에 적는다.
 작품표를 고친 뒤에는 상위 폴더에서 차례로 실행한다.
 
 ```
+zsh scripts/update_site.sh            # 아래 여섯 단계를 한 번에. --push 를 붙이면 커밋하고 올린다
 python3 scripts/merge.py && python3 scripts/exhibitions.py && python3 scripts/review_queue.py && python3 scripts/check.py && python3 scripts/review.py
 python3 scripts/export_site.py
 ```

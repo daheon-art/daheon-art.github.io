@@ -14,8 +14,10 @@ const works = defineCollection({
   schema: ({ image }) =>
     z.object({
       key: z.string(),
-      series: z.enum(['L', 'V', 'W', 'O', 'E']),
+      series: z.enum(['L', 'V', 'W', 'O', 'E', 'U']),
       num: z.string(),
+      // 번호 미상(U) 작품의 일련번호. 이름표 catalog/unnamed.csv 의 미상번호
+      unnamed_no: z.number().int().nullable().default(null),
       title_ko: z.string(),
       title_en: z.string().default(''),
       year: z.number().int().nullable(),

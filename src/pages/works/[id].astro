@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
-import { seriesByCode } from '../../data/series';
+import { seriesByCode, UNTITLED_NOTE } from '../../data/series';
 import exhibitions from '../../data/exhibitions.json';
 import { altText, getWorks, sizeText, workUrl, type Work } from '../../lib/works';
 
@@ -50,6 +50,13 @@ const shows = d.exhibitions
     <div class="caption">
       <h1>{d.title_ko}</h1>
       {d.title_en && <p class="en title-en">{d.title_en}</p>}
+      {
+        d.series === 'U' && (
+          <p class="untitled-note">
+            {UNTITLED_NOTE} <a href={`/works/series/${s.slug}/`}>제목 미상 그림 모두 보기</a>
+          </p>
+        )
+      }
 
       <dl>
         {
@@ -79,8 +86,14 @@ const shows = d.exhibitions
             </>
           )
         }
-        <dt>연작</dt>
-        <dd><a href={`/works/series/${s.slug}/`}>{s.ko}</a></dd>
+        {
+          d.series !== 'U' && (
+            <>
+              <dt>연작</dt>
+              <dd><a href={`/works/series/${s.slug}/`}>{s.ko}</a></dd>
+            </>
+          )
+        }
       </dl>
 
       {
@@ -140,6 +153,12 @@ const shows = d.exhibitions
 
   .title-en {
     margin: 4px 0 0;
+  }
+
+  .untitled-note {
+    margin: 8px 0 0;
+    font-size: 0.88rem;
+    color: var(--muted);
   }
 
   dl {
