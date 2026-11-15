@@ -8,10 +8,12 @@ import { sizeText, yearRange, type Work } from './works';
 const SITE = import.meta.env.SITE;
 export const abs = (path: string) => new URL(path, SITE).href;
 
-export const SITE_NAME = `${ARTIST.ko} ${ARTIST.hanja}`;
+// 첫 화면 제목이자 사이트 이름 (2026-11-15 사용자 결정). 다른 쪽 제목은 "쪽 이름 | 한국화가 김수길"
+export const SITE_NAME = `한국화가 ${ARTIST.ko} 홈페이지`;
+export const TITLE_SUFFIX = `한국화가 ${ARTIST.ko}`;
 const BY = `한국화가 ${ARTIST.ko}(${ARTIST.en})`;
 
-export const DEFAULT_DESCRIPTION = `한국화가 ${ARTIST.ho} ${ARTIST.ko}(${ARTIST.hoHanja} ${ARTIST.hanja}, ${ARTIST.en})의 작품과 약력, 전시`;
+export const DEFAULT_DESCRIPTION = `한국화가 ${ARTIST.ho} ${ARTIST.ko}(${ARTIST.hoHanja} ${ARTIST.hanja}, ${ARTIST.en})의 한국화 작품과 약력, 전시`;
 
 // 예: 한국화가 김수길(Kim Soo-gil)의 〈시공의 빛 2304〉(Light of Time and Space 2304), 2023, 지본채묵, 46.3 × 65.3 cm
 export function workDescription(w: Work): string {
@@ -56,6 +58,7 @@ export const homeLd = () => ({
       '@id': abs('/#website'),
       url: abs('/'),
       name: SITE_NAME,
+      alternateName: [`${ARTIST.ko} ${ARTIST.hanja}`, 'daheon.art'],
       inLanguage: 'ko',
       about: { '@id': ARTIST_ID },
     },

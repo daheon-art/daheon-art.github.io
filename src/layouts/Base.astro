@@ -4,7 +4,7 @@ import { getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import { ARTIST, FEATURED, SHOW_DRAFT_NOTICE } from '../data/site';
 import { altText, getWorks } from '../lib/works';
-import { DEFAULT_DESCRIPTION, SITE_NAME } from '../lib/seo';
+import { DEFAULT_DESCRIPTION, SITE_NAME, TITLE_SUFFIX } from '../lib/seo';
 
 interface Props {
   title?: string;
@@ -19,7 +19,7 @@ interface Props {
 }
 
 const { title, description = DEFAULT_DESCRIPTION, jsonLd, noindex = false } = Astro.props;
-const fullTitle = title ? `${title} | ${ARTIST.ko}` : SITE_NAME;
+const fullTitle = title ? `${title} | ${TITLE_SUFFIX}` : SITE_NAME;
 const path = Astro.url.pathname;
 const canonical = new URL(path, Astro.site).href;
 
