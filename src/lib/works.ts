@@ -1,5 +1,6 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { SERIES } from '../data/series';
+import { ARTIST } from '../data/site';
 
 export type Work = CollectionEntry<'works'>;
 
@@ -39,4 +40,6 @@ export function yearRange(list: Work[]): string {
 }
 
 export const workUrl = (w: Work) => `/works/${w.id}/`;
-export const altText = (w: Work) => [w.data.title_ko, w.data.year].filter(Boolean).join(', ');
+// withArtist: 작품 쪽 큰 그림처럼 검색에 잡혀야 하는 그림은 작가 이름을 앞에 붙인다. 예: 김수길, 시공의 빛 2304, 2023
+export const altText = (w: Work, withArtist = false) =>
+  [withArtist && ARTIST.ko, w.data.title_ko, w.data.year].filter(Boolean).join(', ');

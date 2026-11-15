@@ -4,6 +4,7 @@ import SeriesTabs from '../../../components/SeriesTabs.astro';
 import WorkCard from '../../../components/WorkCard.astro';
 import { SERIES, UNTITLED_NOTE, type Series } from '../../../data/series';
 import { getWorks, yearRange, type Work } from '../../../lib/works';
+import { seriesDescription } from '../../../lib/seo';
 
 export async function getStaticPaths() {
   const works = await getWorks();
@@ -30,7 +31,7 @@ for (const w of list) {
 }
 ---
 
-<Base title={s.ko}>
+<Base title={s.ko} description={seriesDescription(s, list)}>
   <div class="wrap">
     <header class="page-head">
       <h1>{s.ko}</h1>

@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro';
 import { ARTIST, FEATURED } from '../data/site';
 import { SERIES } from '../data/series';
 import { altText, getWorks, sizeText, workUrl, yearRange } from '../lib/works';
+import { homeLd } from '../lib/seo';
 
 const works = await getWorks();
 const featured = works.find((w) => w.id === FEATURED) ?? works[0];
@@ -15,7 +16,7 @@ const series = SERIES.filter((s) => !s.hideOnHome).map((s) => {
 }).filter((x) => x.list.length);
 ---
 
-<Base>
+<Base jsonLd={homeLd()}>
   <section class="wrap hero">
     <div class="intro">
       <h1>
@@ -32,7 +33,7 @@ const series = SERIES.filter((s) => !s.hideOnHome).map((s) => {
       <a href={workUrl(featured)}>
         <Image
           src={featured.data.image}
-          alt={altText(featured)}
+          alt={altText(featured, true)}
           widths={[800, 1200, 1600, 2000]}
           sizes="(max-width: 900px) 100vw, 60vw"
           priority

@@ -3,6 +3,7 @@
 import Base from '../layouts/Base.astro';
 import { ARTIST } from '../data/site';
 import bio from '../data/bio.json';
+import { aboutDescription, aboutLd } from '../lib/seo';
 
 type Section = (typeof bio.sections)[number];
 const byId = (id: string) => bio.sections.find((s) => s.id === id) as Section;
@@ -12,7 +13,7 @@ const right = ['solo', 'international'].map(byId);
 const folded = bio.sections.filter((s) => 'collapsed' in s && s.collapsed);
 ---
 
-<Base title="작가" description={`${ARTIST.ko}(${ARTIST.hanja}) 약력`}>
+<Base title="작가" description={aboutDescription(bio.sections.map((s) => s.title))} jsonLd={aboutLd()}>
   <div class="wrap about">
     <header class="page-head">
       <h1>{ARTIST.ko} <span class="hanja">{ARTIST.hanja}</span></h1>

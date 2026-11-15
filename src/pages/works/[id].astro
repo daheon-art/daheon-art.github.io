@@ -4,6 +4,7 @@ import Base from '../../layouts/Base.astro';
 import { seriesByCode, UNTITLED_NOTE } from '../../data/series';
 import exhibitions from '../../data/exhibitions.json';
 import { altText, getWorks, sizeText, workUrl, type Work } from '../../lib/works';
+import { workDescription, workLd } from '../../lib/seo';
 
 export async function getStaticPaths() {
   const works = await getWorks();
@@ -33,13 +34,19 @@ const shows = d.exhibitions
   .sort((a, b) => (b.year ?? 0) - (a.year ?? 0));
 ---
 
-<Base title={d.title_ko} description={[d.title_ko, d.title_en, d.year].filter(Boolean).join(' · ')}>
+<Base
+  title={d.title_ko}
+  description={workDescription(work)}
+  image={d.image}
+  imageAlt={altText(work, true)}
+  jsonLd={workLd(work, new URL(workUrl(work), Astro.site).href)}
+>
   <article class="wrap work">
     <figure class="view">
       <a href={d.image.src} title="원본 크기로 보기">
         <Image
           src={d.image}
-          alt={altText(work)}
+          alt={altText(work, true)}
           widths={[800, 1200, 1600, 2000]}
           sizes="(max-width: 900px) 100vw, 66vw"
           priority

@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import exhibitions from '../data/exhibitions.json';
 import { altText, getWorks, workUrl } from '../lib/works';
+import { exhibitionsDescription } from '../lib/seo';
 
 const works = await getWorks();
 const byId = new Map(works.map((w) => [w.id, w]));
@@ -16,7 +17,7 @@ for (const e of exhibitions) {
 }
 ---
 
-<Base title="전시">
+<Base title="전시" description={exhibitionsDescription(exhibitions.length)}>
   <div class="wrap">
     <header class="page-head">
       <h1>전시</h1>

@@ -4,6 +4,7 @@ import SeriesTabs from '../../components/SeriesTabs.astro';
 import WorkCard from '../../components/WorkCard.astro';
 import { SERIES, UNTITLED_NOTE } from '../../data/series';
 import { getWorks, yearRange } from '../../lib/works';
+import { worksDescription } from '../../lib/seo';
 
 const works = await getWorks();
 const groups = SERIES.map((s) => ({ s, list: works.filter((w) => w.data.series === s.code) })).filter(
@@ -12,7 +13,7 @@ const groups = SERIES.map((s) => ({ s, list: works.filter((w) => w.data.series =
 const PREVIEW = 12;
 ---
 
-<Base title="작품">
+<Base title="작품" description={worksDescription(works.length, SERIES.filter((s) => !s.hideOnHome).map((s) => s.ko))}>
   <div class="wrap">
     <header class="page-head">
       <h1>작품</h1>
