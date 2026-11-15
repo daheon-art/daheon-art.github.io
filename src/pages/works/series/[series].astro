@@ -21,6 +21,9 @@ interface Props {
 
 const { s, list } = Astro.props;
 
+// '작품'(W) 연작 쪽은 전체 작품 목록(/works/)과 제목이 겹치지 않게 '작품 연작'으로 한다 (2026-11-15)
+const pageTitle = s.code === 'W' ? `${s.ko} 연작` : s.ko;
+
 // 연도별로 묶는다 (연도 미상은 맨 뒤). 제목 미상(U)은 나누지 않고 미상번호 순으로 한 번에 보인다
 const untitled = s.code === 'U';
 const byYear = new Map<string, Work[]>();
@@ -31,7 +34,7 @@ for (const w of list) {
 }
 ---
 
-<Base title={s.ko} description={seriesDescription(s, list)}>
+<Base title={pageTitle} description={seriesDescription(s, list)}>
   <div class="wrap">
     <header class="page-head">
       <h1>{s.ko}</h1>
