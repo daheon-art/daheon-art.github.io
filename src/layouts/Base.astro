@@ -46,6 +46,8 @@ const nav = [
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* 네이버 서치어드바이저 소유 확인 (2026-11-15). 지우면 네이버에서 소유 확인이 풀린다 */}
+    <meta name="naver-site-verification" content="6e2baefa236950de7cb2b7e814319624fe95b020" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
